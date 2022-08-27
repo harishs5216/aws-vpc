@@ -1,0 +1,75 @@
+
+
+STEPS to create CUSTOM VPC
+
+Whenever we create a VPC, a route table and a security group is created along with it.
+The route table created is the main route table and it will be used by Private subnet/s.
+The security group will have a default inbound rule added with the SG id (i.e. LAN as Khurram Sir would have explained)
+
+1. Create a VPC.
+2. Create subnets public and private in different availability zones.
+3. Create route tables for both of the above subnets, IF not already created(read above).
+4. Create an internet gateway and attach to the VPC.
+5. Allocate an Elastic IP if you are going to use it.
+6. Create a NAT gateway in public subnet.
+7. Make sure the private route table is the main subnet. Now, if there is a requirement of making more private subnets
+   then creating more route tables won't be required.
+8. Associate the public route table to the public subnet.
+     - Select the public route table.
+     - Go to edit subnet associations.
+     - Select the public subnet.
+     - Save.
+     
+   (yes, that would be an explicit association. There is no requirement of explicit association for private subnet/s)
+9. Now add ROUTES to the Route Tables.
+     - Select a route table.
+     - Click on Routes.
+     - Edit routes.
+     - Add route.
+     - Destination : 0.0.0.0/0 (for now, but it might not be so in production)
+	 i) Public Route table:  TARGET -> Internet Gateway (that you created above)
+        ii) Private Route table: TARGET -> NAT Gateway (that you created above)
+     - Save routes.
+
+10. Modify auto-assign IP settings.
+     - select the public subnet
+     - click on actions
+     - go to modify auto-assign IP settings
+     - tick on the check box and then save
+
+11. Enable DNS hostnames
+     - go to Your VPCs
+     - select the custom VPC that you created
+     - click on actions
+     - go to Enable DNS hostnames
+     - tick the check box and then save
+
+12. Edit Security Group rules as per requirement.
+
+12. Congratulations! You have a fully working custom VPC created now.
+
+13. Make sure to check if VPC is working, by launching instances in the subnets created above and using internet. TO BELIEVE.....
+
+
+NOTE: If you want to add more subnets, just create a subnet in the above VPC.
+      Nothing extra is required to be done as it will use the MAIN route table we created above.
+
+
+
+
+If you don't know how to delete a VPC, then here are the steps.
+
+
+Steps to DELETE a VPC and its related components.
+
+1. Stop the running instances that are using that VPC.
+2. Delete NAT Gateway.
+3. Delete VPC.
+4. Release Elastic IP.
+5. Voila! It's done.
+
+
+Thank me later ;)
+Pratyush
+
+Last edited on: March 13, 2020
